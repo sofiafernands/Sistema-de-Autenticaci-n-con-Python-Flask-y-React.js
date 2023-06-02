@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-
 import { Context } from "../store/appContext";
 
-export const Demo = () => {
+import "../../styles/demo.css";
+
+export const Demo = () => { //modificar de cero, se ha borrado en flux la parte de "demo" porque no la usaremos 
 	const { store, actions } = useContext(Context);
 
 	return (
+
 		<div className="container">
-			<ul className="list-group">
+			<p>DEMO</p>
+			 <ul className="list-group">
 				{store.demo.map((item, index) => {
 					return (
 						<li
@@ -33,9 +36,9 @@ export const Demo = () => {
 				})}
 			</ul>
 			<br />
-			<Link to="/">
+			<Link to="/home">
 				<button className="btn btn-primary">Back home</button>
-			</Link>
+			</Link> 
 		</div>
 	);
 };

@@ -1,0 +1,5 @@
+.wrapScroll {
+    white-space: nowrap;
+    overflow-x: auto;
+    padding: 2%;
+  }
