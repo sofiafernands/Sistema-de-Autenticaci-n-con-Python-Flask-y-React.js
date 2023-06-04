@@ -5,7 +5,7 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = 'user'  #__tablename__ Especifica el nombre de la tabla en la base de datos para cada clase.
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), nullable=False)
+    password = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(250), unique=True, nullable=False)
     favorites_planets = db.relationship('FavoritesPlanets', backref='user', lazy=True) #Se definen relaciones entre las tablas utilizando la función relationship de SQLAlchemy.
     favorites_characters = db.relationship('FavoritesCharacters', backref='user', lazy=True) #Se definen relaciones entre las tablas utilizando la función relationship de SQLAlchemy.
@@ -20,8 +20,7 @@ class User(db.Model):
                           # El valor de "id" se obtiene del atributo self.id, el valor de "name" se obtiene del atributo self.name,
         return {
             "id": self.id,
-            "email": self.email,
-            "name": self.name,
+            "email": self.email
             # do not serialize the password, its a security breach
         }
 
