@@ -12,11 +12,16 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager # importamos jwt
+from flask_jwt_extended import create_access_token   #para crear tokens web JSON
+from flask_jwt_extended import jwt_required  #para proteger rutas
+from flask_jwt_extended import get_jwt_identity   #para obtener la identidad de un JWT en la ruta protegida
+
 
 #from models import Person
 
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
+
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
@@ -28,18 +33,17 @@ if db_url is not None:
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
+
 # Allow CORS requests to this API / # Permitir solicitudes CORS a esta API
 CORS(app)
-
-# add the admin / # agregar el administrador
-setup_admin(app)
+setup_commands(app)
 app.config["JWT_SECRET_KEY"] = os.getenv("FLASK_APP_KEY")  # Change this! / cambia esto
 jwt = JWTManager(app)
+
 
 # add the admin / # agregar el administrador
 setup_commands(app)
@@ -73,3 +77,4 @@ def serve_any_other_file(path):
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+    

@@ -5,19 +5,21 @@ import os
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
+from flask_jwt_extended import create_access_token #para crear tokens web JSON
+from flask_jwt_extended import get_jwt_identity #para obtener la identidad de un JWT en la ruta protegida
+from flask_jwt_extended import jwt_required #para proteger rutas
 from flask_jwt_extended import JWTManager
-from flask_jwt_extended import create_access_token   #para crear tokens web JSON
-from flask_jwt_extended import jwt_required  #para proteger rutas
-from flask_jwt_extended import get_jwt_identity   #para obtener la identidad de un JWT en la ruta protegida
-
 
 api = Blueprint('api', __name__)
 
+
 #REGISTRARSE
-@api.route('/signup', methods = ['POST'] )
-def register_user():
+@api.route('/signup', methods=['POST'])
+def register():
     data = request.json #Obtenemos los datos enviados en la solicitud
-    taken = User.query.filter_by(email=data.get('email')) #Verificamos si el correo electrónico ya está registrado en la base de datos
+    taken = User.query.filter_by(email=data.get('email')).first()#Verificamos si el correo electrónico ya está registrado en la base de datos
+    print(data)
+    print(taken)
     if not taken: #si el email no esta registrado
         user = User (email=data.get('email'), password=data.get('password')) #creamos un nuevo usuario con email y password
         db.session.add(user) #agregamos al usuario a la sesion de base de datos
@@ -31,17 +33,17 @@ def register_user():
     
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
-    api.run(host='0.0.0.0', port=PORT, debug=False)
+    api.run(host='0.0.0.0', port=PORT, debug=True)
 
 
-    
+
+@api.route('/hello', methods=['POST', 'GET'])
+def handle_hello():
+
+     response_body = {
+         "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
+     }
+
+     return jsonify(response_body), 200
 
 
-# @api.route('/hello', methods=['POST', 'GET'])
-# def handle_hello():
-
-#     response_body = {
-#         "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-#     }
-
-#     return jsonify(response_body), 200
