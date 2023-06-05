@@ -20,7 +20,9 @@ class User(db.Model):
                           # El valor de "id" se obtiene del atributo self.id, el valor de "name" se obtiene del atributo self.name,
         return {
             "id": self.id,
-            "email": self.email
+            "email": self.email,
+            "favorites_planets": self.favorites_planets.serialize() if self.favorites_planets else None, 
+            "favorites_characters": self.favorites_characters.serialize() if self.favorites_characters else None
             # do not serialize the password, its a security breach
         }
 
