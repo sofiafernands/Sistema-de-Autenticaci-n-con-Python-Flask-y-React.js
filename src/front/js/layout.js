@@ -10,6 +10,7 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import Login from "./pages/login";
 //import  { Cards }  from "./component/cards.js";
 
 
@@ -23,24 +24,21 @@ const Layout = () => {
 	return (
 		<div>
 			<BrowserRouter basename={basename}> 
-			{/* todo lo que se coloque dentro de browserRouter,como por ejemplo Navbar, av a persistir en la vista de la interfaz independientemente de la ruta, se vera
-			en todas las rutas */}
-				<ScrollToTop>
+				<ScrollToTop>  {/*se agrega lo que va persistir en la vista de la interfaz independientemente de la ruta*/} 
 					<Navbar/>
-					
-				{/* en routes se colocan todas las rutas que queremos envolcer (route), routes y route tenemos que importarlo al principio del documento */}
+							{/* en routes se colocan todas las rutas que queremos envolver (route), routes y route tenemos que importarlo al principio del documento */}
 					<Routes> 
 						{/* se coloca la ruta en path="/" en el cual cuando entremos en esa ruta especificamente nos lleva al componente que deseamos, nombrandolo en 
 						( element={<Home /> podria ser cualquier otro componente}) Le dice a React que muestre la única <Route> que coincide con la URL mostrada. */}
-						<Route path="/" element={<Home />} />  
+						<Route path="/" element={<Login />} />
+						<Route path="/" element={<signup />} />
+						<Route path="/home" element={<Home />} />  
 						<Route path="/demo" element={<Demo />} />
 						<Route path="/single/:theid" element={<Single />} />
 						<Route path="/single/:type/:theid" element={<Single />} /> {/*es lo mismo que estamos colocando en card.js*/} 
-						
 						  {/* aqui iria la ruta dinamica ya que  tiene un añadido que dice: oye aunque las paginas sean iguales, en cada una quiero
 																				 un tipo de datos diferentes. muy importante añadir los : para que react diga vale esto no es una palabra es una "caracteristica" */}
 						<Route path="*" element={<h1>Not found!</h1>} /> 
-
 					</Routes>
 					<Footer />
 				</ScrollToTop>

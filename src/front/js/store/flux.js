@@ -1,4 +1,4 @@
-const getState = ({ getStore,getActions, setStore }) => {
+const getState = ({ getStore, setStore }) => {
 	return {
 		store: {
 			//aqui debo declarar un array de favoritos que se puedan agregar cuando el usuario lo desee,al igual que array de planets y character.
@@ -61,10 +61,10 @@ const getState = ({ getStore,getActions, setStore }) => {
 			},
 			//vehicles INDIVIDUAL
 			fetchVehicle: (id) => {
-  fetch(`https://swapi.dev/api/vehicles/${id}`)
-    .then(response => response.json())
-    .then(data => setStore({ vehicle: data.result.properties }))
-    .catch(err => console.log("Request failed", err));
+  				fetch(`https://swapi.dev/api/vehicles/${id}`)
+				.then(response => response.json())
+				.then(data => setStore({ vehicle: data.result.properties }))
+				.catch(err => console.log("Request failed", err));
 },
 			//AGREGAR A FAVORITOS
 			 								
@@ -72,19 +72,18 @@ const getState = ({ getStore,getActions, setStore }) => {
 				const store=getStore()
 				if (!store.favorites.includes(name)) {
 					setStore({favorites:[...store.favorites,name]})
-				
-				} else {
+				} 
+				else {
 					let filtered = store.favorites.filter(favorite => favorite != name)
 					setStore({favorites:filtered})
 				}
 				 //se obtiene el estado actual con store con los ateriores
 				},
 				
-				//ELEMINAR DE FAVORITOS
-
+				//ELEMINAR DE FAVORITOS 
 				deleteFavorite: (i) => {
 					const store = getStore();
-					const newList = store.favorites.filter((name, index) => index !== i);
+					const newList = store.favorites.filter((index) => index !== i);
 					setStore({ favorites: newList });
 				}
 				
