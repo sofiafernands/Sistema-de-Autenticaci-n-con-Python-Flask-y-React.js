@@ -65,7 +65,7 @@ const getState = ({ getStore, setStore }) => {
 				.then(response => response.json())
 				.then(data => setStore({ vehicle: data.result.properties }))
 				.catch(err => console.log("Request failed", err));
-},
+			},
 			//AGREGAR A FAVORITOS
 			 								
 				addToFavorites:(name) =>{  //addToFavorites tomo un personaje como argumento(name) y su propiedad name
@@ -86,7 +86,9 @@ const getState = ({ getStore, setStore }) => {
 					const newList = store.favorites.filter((index) => index !== i);
 					setStore({ favorites: newList });
 				}
-				
+			//AQUI COMIENZAN LOS NUEVOS FETCH-BACK
+			
+				  
 		}
 	}
 };
