@@ -12,17 +12,8 @@ const Login = () => {
   }
 
   const handleClick = () => {
-    fetch(process.env.BACKEND_URL + "api/user", {
-      method:'POST',
-      body: JSON.stringify(user),
-      headers: {
-        'Content-Type':'application/json'
-      }
-    }) 
-    .then(resp => resp.json())
-    .then(data => console.log(data))
+    actions.register(user);
   }
-  console.log(handleClick)
   
 
   return (

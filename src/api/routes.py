@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User,Characters,Planets
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token  # para crear tokens web JSON
 # para obtener la identidad de un JWT en la ruta protegida
@@ -18,14 +18,14 @@ api = Blueprint('api', __name__)
 @api.route('/user', methods=['GET'])
 def handle_userAll():
 
-    users = User.query.all() #almacenamos todos los usuarios
-    data = [user.serialize() for user in users ] # para cada usuario dentro de los usuarios me los serialice
-
+    users = User.query.all() 
+    data = [user.serialize() for user in users ] 
     return jsonify(data), 200 #aqui lo convertimos en string con jsonify
 
 #USER SINGLE
 @api.route('/user/<int:id>', methods=['GET'])
 def get_userSingle(id):
+
     user = User.query.get(id) #se obtiene el usuario de la base de datos utilizando User.query.get(id)
     
     if user is None: #Si user es None, se lanza la excepción APIException con el mensaje "This user does not exist" y el codigo de estado 400.
@@ -33,35 +33,10 @@ def get_userSingle(id):
     
     return jsonify(user.serialize()), 200
 
-#CREATE NEW USER (POST)
-@api.route('/user', methods = ['POST']) #ruta para aceptar solicitudes y crear nuevo usuario
-def create_user(): #def create_user(): Esta función llamada create_user se ejecutará cuando se acceda a la ruta /user mediante una solicitud POST.
-
-#se guarda el contenido en la variable "body"
-    body = request.json #request.json contiene los datos enviados con la solicitud POST.
-
-    if body is None:
-        raise APIException("You need to specify the request body as a json object", status_code=400)
-    if 'name' not in body or not body ['name']:  #se verifica que esta agregada la propiedad name y que no se ingrese el campo vacio
-        raise APIException("You need to specify the name, can't be empty" , status_code=400)
-    if 'email' not in body or not body['email']:
-        raise APIException("You need to specify the email, can't be empty", status_code=400)
-
-    user = User(email=body["email"], name=body["name"],password=body["password"]) #se crea un objeto de la clase User con los valores del correo electrónico y el estado activo obtenidos del objeto body.
-    db.session.add(user) #esto indica que se debe crear un nuevo registro en la base de datos con los valores proporcionados.
-    db.session.commit() #Realiza una confirmación en la sesión de la base de datos, lo que efectivamente guarda los cambios realizados en la base de datos.
-
-    response_body = {
-        "msg": "El usuario ha sido creado",
-    } # Creamos un diccionario llamado response_body que contiene un mensaje indicando que el usuario ha sido creado.
-
-    return jsonify(response_body), 200 #La función jsonify se utiliza para convertir el diccionario en una respuesta JSON valida
-
 #DELETE USER (ID)
 @api.route('/user/<int:id>', methods=['DELETE'])
 def delete_userSingle(id): #esta funcion recibe el parámetro id, que se obtiene de la URL.
-        #Se verifica si user existe. Si no existe, se devuelve una respuesta con un mensaje de "User not found" y un codigo de estado 404.
-        #Si el usuario existe, se elimina de la base de datos usando db.session.delete(user). Luego, se confirma la transacción con db.session.commit().
+        
     user = User.query.get(id)
     if user:
         db.session.delete(user)
@@ -184,20 +159,25 @@ def delete_planet(id):
     else:
         return jsonify({'message':'Planet not found'}), 400
 
-
-
-
 # REGISTRARSE
 @api.route('/signup', methods=['POST'])
 def register():
+    print('hola')
     data = request.json  # Obtenemos los datos enviados en la solicitud
+    if data is None:
+        raise APIException("You need to specify the request data as a json object", status_code=400)
+    if 'name' not in data or not data ['name']:  #se verifica que esta agregada la propiedad name y que no se ingrese el campo vacio
+        raise APIException("You need to specify the name, can't be empty" , status_code=400)
+    if 'email' not in data or not data['email']:
+        raise APIException("You need to specify the email, can't be empty", status_code=400)
+
     # Verificamos si el correo electrónico ya está registrado en la base de datos
     taken = User.query.filter_by(email=data.get('email')).first()
     print(data)
     print(taken)
     if not taken:  # si el email no esta registrado
         # creamos un nuevo usuario con email y password
-        user = User(email=data.get('email'), password=data.get('password'))
+        user = User(email=data.get('email'), password=data.get('password'),name=data.get('name'))
         # agregamos al usuario a la sesion de base de datos
         db.session.add(user)
         db.session.commit()  # guardamos cambios
@@ -227,7 +207,7 @@ def login():
 @api.route('/private', methods=['GET'])
 @jwt_required()  # Protege la ruta, requiere autenticación JWT
 def get_private_acces():
-    return 'esto es datos privados'
+    return 'esto es datos privados', 200
 
 
 if __name__ == '__main__':

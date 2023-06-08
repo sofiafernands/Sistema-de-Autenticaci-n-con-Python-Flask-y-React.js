@@ -11,7 +11,7 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import Login from "./pages/login";
-//import  { Cards }  from "./component/cards.js";
+import { Private } from "./pages/private";
 
 
 
@@ -31,7 +31,8 @@ const Layout = () => {
 						{/* se coloca la ruta en path="/" en el cual cuando entremos en esa ruta especificamente nos lleva al componente que deseamos, nombrandolo en 
 						( element={<Home /> podria ser cualquier otro componente}) Le dice a React que muestre la única <Route> que coincide con la URL mostrada. */}
 						<Route path="/" element={<Login />} />
-						<Route path="/" element={<signup />} />
+						<Route path="/private" element={<Private />} />
+						<Route path="/signup" element={<signup />} />
 						<Route path="/home" element={<Home />} />  
 						<Route path="/demo" element={<Demo />} />
 						<Route path="/single/:theid" element={<Single />} />
